@@ -1,7 +1,75 @@
 import 'dart:convert';
 
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:hlsvideostreaming/feed_player/feed_player.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
+const urls = [
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1213_shipra_mam_7_papercrumpling_ice_cream/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1215_shipra_mam_8_papercruumpling_birthday_cap_1/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1216_shipra_mam/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1405_shagun_mam_v2/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1410_15121_minion_fonts_a_to_p/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1418_smiley_cartoon_fonts_with_shagun_maam_t_to_z_4754/hls_class/class_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1608/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1609/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/9610/hls_session/session_video.m3u8",
+  "https://tech-assignments.yellowclass.com/1618/hls_class/class_video.m3u8",
+];
+int curr_pos = -1;
+double curr_pos_visibility = 0;
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -50,7 +118,7 @@ class _MyAppBarState extends State<MyAppBar> {
     return Expanded(
       flex: 1,
       child: Container(
-        color: Colors.blueGrey,
+        color: Color(0xff474747),
         child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: arr.length,
@@ -65,7 +133,7 @@ class _MyAppBarState extends State<MyAppBar> {
                   },
                   child: ChoiceChip(
                       selectedColor: Colors.white,
-                      disabledColor: Colors.grey,
+                      disabledColor: Colors.grey.shade600,
                       label: Text(
                         arr[index],
                         style: TextStyle(
@@ -87,39 +155,21 @@ class MyAppBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 5,
-      child: Container(
-        color: Colors.blue,
-        child: FutureBuilder(
-          future: DefaultAssetBundle.of(context).loadString("assets/data.json"),
-          builder: (context, snapshot){
-            var new_data = json.decode(snapshot.data.toString());
-            return ListView.builder(
-              itemCount: new_data.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: MyVideoCard(
-                      url:
-                          new_data[index]['videoUrl']),
-                );
-              });
-          },
-          
-        ),
-      ),
+      child: FeedPlayer(),
     );
   }
 }
 
 class MyVideoCard extends StatelessWidget {
-  MyVideoCard({required this.url});
+  MyVideoCard({required this.url, required this.index});
   String url;
+  int index;
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          MyVideoWidget(url: url),
+          MyVideoWidget(url: url, index: index),
           // MySeekerWidget(),
           // MyVideoInfo(),
         ],
@@ -129,50 +179,55 @@ class MyVideoCard extends StatelessWidget {
 }
 
 class MyVideoWidget extends StatefulWidget {
-  MyVideoWidget({required this.url});
+  MyVideoWidget({required this.url, required this.index});
 
   String url;
+  int index;
 
   @override
   State<MyVideoWidget> createState() => _MyVideoWidgetState();
 }
 
 class _MyVideoWidgetState extends State<MyVideoWidget> {
-  late VideoPlayerController _videoPlayerController;
-
-  bool isPlaying = false;
+  late FlickManager flickManager;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.url)
-      ..initialize().then((value) {
-        setState(() {});
-      });
+    flickManager = FlickManager(
+      videoPlayerController: VideoPlayerController.network(widget.url),
+    );
+  }
+
+  @override
+  void dispose() {
+    flickManager.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          _videoPlayerController.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _videoPlayerController.value.aspectRatio,
-              child: VideoPlayer(_videoPlayerController),
-            )
-          : Container(),
+    return VisibilityDetector(
+      key: Key(widget.index.toString()),
+      onVisibilityChanged: (visibility) {
+        if (visibility.visibleFraction == 0 && this.mounted) {
+          flickManager.flickControlManager?.pause();
+        } else if (visibility.visibleFraction == 1) {
+          flickManager.flickControlManager?.autoResume();
+        }
+      },
 
-          IconButton(onPressed: () {
-            setState(() {
-              _videoPlayerController.value.isPlaying
-                  ? _videoPlayerController.pause()
-                  : _videoPlayerController.play();
-                  isPlaying = (_videoPlayerController.value.isPlaying ? true : false);
-            });
-          }, 
-          icon: Icon(isPlaying ? Icons.pause : Icons.play_circle_filled)),
-        ],
+      child: Container(
+        child: Column(
+          children: [
+            Text(
+              "${widget.index}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            FlickVideoPlayer(flickManager: flickManager)
+          ],
+        ),
       ),
     );
   }
@@ -184,7 +239,7 @@ class MyAppBottomNavigationBar extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: Container(
-        color: Colors.blueGrey,
+        color: Color(0xff474747),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -193,7 +248,7 @@ class MyAppBottomNavigationBar extends StatelessWidget {
                 icon: Icons.slow_motion_video, str: 'Shorts'),
             Expanded(
               child: const CircleAvatar(
-                backgroundColor: Colors.grey,
+                backgroundColor: Color(0xff1f1c1c),
                 radius: 20,
                 child: Icon(
                   Icons.add_rounded,

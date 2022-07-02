@@ -32,6 +32,7 @@ class _FeedPlayerState extends State<FeedPlayer> {
         }
       },
       child: Container(
+        color: Colors.blueGrey[400],
         child: ListView.separated(
           separatorBuilder: (context, int) => Container(
             height: 50,

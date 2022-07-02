@@ -5,6 +5,7 @@ A new Flutter project.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
+[The Drive link to the latest APK can be found here](https://drive.google.com/file/d/1H6WpLvmzI-NmP_zmHMWtzTzKyF-65a-p/view?usp=sharing)
 
 A few resources to get you started if this is your first Flutter project:
 
